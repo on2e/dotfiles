@@ -1,0 +1,56 @@
+- name: krew | Check if binary exists
+  ansible.builtin.stat:
+    path: "{{ ansible_facts['env'].HOME }}/.krew/bin/kubectl-krew"
+  register: krew_stat
+
+- name: krew | Check existing version
+  when: krew_stat.stat.exists
+  ansible.builtin.command: "{{ ansible_facts['env'].HOME }}/.krew/bin/kubectl-krew version"
+  register: krew_version_cmd
+  check_mode: false
+  changed_when: false
+
+- name: krew | Download release binary and install krew plugin
+  when: >-
+    not krew_stat.stat.exists
+    or (tools_krew_version != (
+      krew_version_cmd.stdout_lines |
+      select('search', '^GitTag') |
+      first |
+      regex_search('v[0-9]+\\.[0-9]+\\.[0-9]+$')
+    ))
+  block:
+    - name: krew | Create temporary directory
+      ansible.builtin.tempfile:
+        state: directory
+        prefix: ansible-krew-
+      register: temp_dir
+
+    - name: krew | Download and extract release archive
+      ansible.builtin.unarchive:
+        src: "https://github.com/kubernetes-sigs/krew/releases/download/{{ tools_krew_version }}/krew-linux_amd64.tar.gz"
+        dest: "{{ temp_dir.path }}"
+        remote_src: true
+        mode: "0755"
+
+    - name: krew | Update plugin indexes and install krew plugin
+      ansible.builtin.command: "{{ temp_dir.path }}/krew-linux_amd64 install krew"
+      args:
+        creates: "{{ ansible_facts['env'].HOME }}/.krew/bin/kubectl-krew"
+  always:
+    - name: krew | Remove temporary directory
+      ansible.builtin.file:
+        path: "{{ temp_dir.path }}"
+        state: absent
+
+- name: krew | Update plugin indexes and install plugins from krew_plugins.txt
+  ansible.builtin.command: "{{ ansible_facts['env'].HOME }}/.krew/bin/kubectl-krew install"
+  args:
+    stdin: "{{ lookup('file', 'krew_plugins.txt') }}"
+  # TODO: changed_when
+
+- name: krew | Copy initialization script under ~/.bashrc.d
+  ansible.builtin.copy:
+    src: krew.sh
+    dest: "{{ ansible_facts['env'].HOME }}/.bashrc.d/krew.sh"
+    mode: "0644"

@@ -1,2 +1,5 @@
 - name: Install kubectl
   ansible.builtin.import_tasks: kubectl.yaml
+
+- name: Install krew
+  ansible.builtin.import_tasks: krew.yaml
