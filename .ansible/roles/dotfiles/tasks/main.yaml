@@ -1,0 +1,44 @@
+- name: Download .git-prompt.sh script
+  become: true
+  become_user: "{{ item }}"
+  ansible.builtin.get_url:
+    url: https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh
+    dest: "~{{ item }}/.git-prompt.sh"
+    mode: "0644"
+  loop:
+    - "{{ ansible_facts['user_id'] }}"
+    - root
+
+- name: Copy .bashrc.d directory
+  become: true
+  become_user: "{{ item }}"
+  ansible.builtin.copy:
+    src: "{{ repo_root }}/.bashrc.d"
+    dest: "~{{ item }}"
+    directory_mode: "0755"
+    mode: "0644"
+  loop:
+    - "{{ ansible_facts['user_id'] }}"
+    - root
+
+- name: Copy .bashrc script
+  become: true
+  become_user: "{{ item }}"
+  ansible.builtin.copy:
+    src: "{{ repo_root }}/.bashrc"
+    dest: "~{{ item }}/.bashrc"
+    mode: "0644"
+  loop:
+    - "{{ ansible_facts['user_id'] }}"
+    - root
+
+- name: Copy .bash_profile script
+  become: true
+  become_user: "{{ item }}"
+  ansible.builtin.copy:
+    src: "{{ repo_root }}/.bash_profile"
+    dest: "~{{ item }}/.bash_profile"
+    mode: "0644"
+  loop:
+    - "{{ ansible_facts['user_id'] }}"
+    - root

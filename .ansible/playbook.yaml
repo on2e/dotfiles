@@ -1,0 +1,15 @@
+- name: Set up host
+  hosts: local
+  become: false
+  vars:
+    repo_root: "{{ playbook_dir | dirname }}"
+  pre_tasks:
+    - name: Abort if connected as root
+      ansible.builtin.assert:
+        that: ansible_facts['user_uid'] != 0
+        fail_msg: >
+          This playbook must NOT be run as root.
+          Please run it as a normal user (using `become` where needed).
+  roles:
+    - packages
+    - dotfiles
