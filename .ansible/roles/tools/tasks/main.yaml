@@ -4,5 +4,8 @@
 - name: Install krew
   ansible.builtin.import_tasks: krew.yaml
 
+- name: Install kustomize
+  ansible.builtin.import_tasks: kustomize.yaml
+
 - name: Install kind
   ansible.builtin.import_tasks: kind.yaml

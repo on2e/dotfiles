@@ -1,0 +1,50 @@
+- name: kustomize | Check if binary exists
+  ansible.builtin.stat:
+    path: /usr/local/bin/kustomize
+  register: kustomize_stat
+
+- name: kustomize | Check existing version
+  when: kustomize_stat.stat.exists
+  ansible.builtin.command: /usr/local/bin/kustomize version
+  register: kustomize_version_cmd
+  check_mode: false
+  changed_when: false
+
+- name: kustomize | Download and install release binary
+  when: >-
+    not kustomize_stat.stat.exists
+    or (tools_kustomize_version != kustomize_version_cmd.stdout)
+  block:
+    - name: kustomize | Create temporary directory
+      ansible.builtin.tempfile:
+        state: directory
+        prefix: ansible-kustomize-
+      register: temp_dir
+
+    - name: kustomize | Download and extract release archive
+      ansible.builtin.unarchive:
+        src: "https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize/{{ tools_kustomize_version }}/kustomize_{{ tools_kustomize_version }}_linux_amd64.tar.gz"
+        dest: "{{ temp_dir.path }}"
+        remote_src: true
+        mode: "0755"
+
+    - name: kustomize | Install binary
+      become: true
+      ansible.builtin.copy:
+        src: "{{ temp_dir.path }}/kustomize"
+        dest: /usr/local/bin/kustomize
+        remote_src: true
+        owner: root
+        group: root
+        mode: "0755"
+  always:
+    - name: kustomize | Remove temporary directory
+      ansible.builtin.file:
+        path: "{{ temp_dir.path }}"
+        state: absent
+
+- name: kustomize | Copy initialization script under ~/.bashrc.d
+  ansible.builtin.copy:
+    src: kustomize.sh
+    dest: "{{ ansible_facts['env'].HOME }}/.bashrc.d/kustomize.sh"
+    mode: "0644"
