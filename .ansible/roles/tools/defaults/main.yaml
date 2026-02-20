@@ -7,3 +7,5 @@ tools_krew_version: "v0.4.5"
 tools_kubectl_version: "v1.35.1"
 
 tools_kustomize_version: "v5.8.1"
+
+tools_nvm_version: "v0.40.4"

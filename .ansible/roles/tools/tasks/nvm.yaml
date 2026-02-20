@@ -1,0 +1,46 @@
+- name: nvm | Clone repository
+  ansible.builtin.git:
+    repo: https://github.com/nvm-sh/nvm.git
+    dest: "{{ ansible_facts['env'].HOME }}/.nvm"
+    version: "{{ tools_nvm_version }}"
+
+- name: nvm | Bootstrap latest node version if no other versions are installed under nvm
+  environment:
+    BASH_ENV: "{{ ansible_facts['env'].HOME }}/.nvm/nvm.sh"
+  block:
+    - name: nvm | List installed node versions
+      ansible.builtin.shell: nvm ls --no-colors
+      args:
+        executable: /bin/bash
+      register: nvm_ls_cmd
+      check_mode: false
+      changed_when: false
+      failed_when:
+        - nvm_ls_cmd.rc != 0
+        - nvm_ls_cmd.rc != 3
+
+    - name: nvm | Set fact to indicate whether a node version is installed
+      ansible.builtin.set_fact:
+        nvm_has_node: "{{ nvm_ls_cmd.rc != 3 }}"
+
+    - name: nvm | Resolve latest remote node version if none is installed
+      when: not nvm_has_node
+      ansible.builtin.shell: nvm version-remote node
+      args:
+        executable: /bin/bash
+      register: nvm_version_remote_cmd
+      check_mode: false
+      changed_when: false
+
+    - name: nvm | Install latest node version
+      when: not nvm_has_node
+      ansible.builtin.shell: nvm install --no-progress node
+      args:
+        executable: /bin/bash
+        creates: "{{ ansible_facts['env'].HOME }}/.nvm/versions/node/{{ nvm_version_remote_cmd.stdout }}/bin/node"
+
+- name: nvm | Copy initialization script under ~/.bashrc.d
+  ansible.builtin.copy:
+    src: nvm.sh
+    dest: "{{ ansible_facts['env'].HOME }}/.bashrc.d/nvm.sh"
+    mode: "0644"

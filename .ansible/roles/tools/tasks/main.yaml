@@ -12,3 +12,6 @@
 
 - name: Install helm
   ansible.builtin.import_tasks: helm.yaml
+
+- name: Install nvm
+  ansible.builtin.import_tasks: nvm.yaml
