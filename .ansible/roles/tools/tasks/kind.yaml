@@ -1,0 +1,29 @@
+- name: kind | Check if binary exists
+  ansible.builtin.stat:
+    path: /usr/local/bin/kind
+  register: kind_stat
+
+- name: kind | Check existing version
+  when: kind_stat.stat.exists
+  ansible.builtin.command: /usr/local/bin/kind version
+  register: kind_version_cmd
+  check_mode: false
+  changed_when: false
+
+- name: kind | Install binary
+  when: >-
+    not kind_stat.stat.exists
+    or (tools_kind_version != kind_version_cmd.stdout.split(' ')[1])
+  become: true
+  ansible.builtin.get_url:
+    url: "https://kind.sigs.k8s.io/dl/{{ tools_kind_version }}/kind-linux-amd64"
+    dest: /usr/local/bin/kind
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: kind | Copy initialization script under ~/.bashrc.d
+  ansible.builtin.copy:
+    src: kind.sh
+    dest: "{{ ansible_facts['env'].HOME }}/.bashrc.d/kind.sh"
+    mode: "0644"
