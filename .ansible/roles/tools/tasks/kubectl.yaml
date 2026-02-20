@@ -1,0 +1,31 @@
+- name: kubectl | Check if binary exists
+  ansible.builtin.stat:
+    path: /usr/local/bin/kubectl
+  register: kubectl_stat
+
+- name: kubectl | Check existing version
+  when: kubectl_stat.stat.exists
+  ansible.builtin.command: /usr/local/bin/kubectl version --client -o json
+  register: kubectl_version_cmd
+  check_mode: false
+  changed_when: false
+
+- name: kubectl | Install binary
+  when: >-
+    not kubectl_stat.stat.exists
+    or (tools_kubectl_version != (
+      kubectl_version_cmd.stdout | from_json).clientVersion.gitVersion
+    )
+  become: true
+  ansible.builtin.get_url:
+    url: "https://dl.k8s.io/release/{{ tools_kubectl_version }}/bin/linux/amd64/kubectl"
+    dest: /usr/local/bin/kubectl
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: kubectl | Copy initialization script under ~/.bashrc.d
+  ansible.builtin.copy:
+    src: kubectl.sh
+    dest: "{{ ansible_facts['env'].HOME }}/.bashrc.d/kubectl.sh"
+    mode: "0644"

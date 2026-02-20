@@ -13,3 +13,4 @@
   roles:
     - packages
     - dotfiles
+    - tools

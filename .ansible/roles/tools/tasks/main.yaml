@@ -1,0 +1,2 @@
+- name: Install kubectl
+  ansible.builtin.import_tasks: kubectl.yaml
