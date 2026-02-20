@@ -1,0 +1,50 @@
+- name: helm | Check if binary exists
+  ansible.builtin.stat:
+    path: /usr/local/bin/helm
+  register: helm_stat
+
+- name: helm | Check existing version
+  when: helm_stat.stat.exists
+  ansible.builtin.command: /usr/local/bin/helm version --template='{% raw %}{{.Version}}{% endraw %}'
+  register: helm_version_cmd
+  check_mode: false
+  changed_when: false
+
+- name: helm | Download and install release binary
+  when: >-
+    not helm_stat.stat.exists
+    or (tools_helm_version != helm_version_cmd.stdout)
+  block:
+    - name: helm | Create temporary directory
+      ansible.builtin.tempfile:
+        state: directory
+        prefix: ansible-helm-
+      register: temp_dir
+
+    - name: helm | Download and extract release archive
+      ansible.builtin.unarchive:
+        src: "https://get.helm.sh/helm-{{ tools_helm_version }}-linux-amd64.tar.gz"
+        dest: "{{ temp_dir.path }}"
+        remote_src: true
+        mode: "0755"
+
+    - name: helm | Install binary
+      become: true
+      ansible.builtin.copy:
+        src: "{{ temp_dir.path }}/linux-amd64/helm"
+        dest: /usr/local/bin/helm
+        remote_src: true
+        owner: root
+        group: root
+        mode: "0755"
+  always:
+    - name: helm | Remove temporary directory
+      ansible.builtin.file:
+        path: "{{ temp_dir.path }}"
+        state: absent
+
+- name: helm | Copy initialization script under ~/.bashrc.d
+  ansible.builtin.copy:
+    src: helm.sh
+    dest: "{{ ansible_facts['env'].HOME }}/.bashrc.d/helm.sh"
+    mode: "0644"

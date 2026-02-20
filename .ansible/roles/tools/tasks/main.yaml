@@ -9,3 +9,6 @@
 
 - name: Install kind
   ansible.builtin.import_tasks: kind.yaml
+
+- name: Install helm
+  ansible.builtin.import_tasks: helm.yaml

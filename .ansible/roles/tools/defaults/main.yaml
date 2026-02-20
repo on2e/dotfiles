@@ -1,3 +1,5 @@
+tools_helm_version: "v4.1.1"
+
 tools_kind_version: "v0.31.0"
 
 tools_krew_version: "v0.4.5"
