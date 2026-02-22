@@ -1,11 +1,17 @@
+# renovate: datasource=github-releases depName=helm/helm
 tools_helm_version: "v4.1.1"
 
+# renovate: datasource=github-releases depName=kubernetes-sigs/kind
 tools_kind_version: "v0.31.0"
 
+# renovate: datasource=github-releases depName=kubernetes-sigs/krew
 tools_krew_version: "v0.4.5"
 
+# renovate: datasource=github-releases depName=kubernetes/kubernetes
 tools_kubectl_version: "v1.35.1"
 
+# renovate: datasource=github-releases depName=kubernetes-sigs/kustomize extractVersion=^kustomize/(?<version>.+)$
 tools_kustomize_version: "v5.8.1"
 
+# renovate: datasource=github-releases depName=nvm-sh/nvm
 tools_nvm_version: "v0.40.4"
