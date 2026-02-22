@@ -1,0 +1,74 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended", ":gitSignOff"],
+  "baseBranchPatterns": ["main"],
+  "semanticCommits": "enabled",
+  "prCreation": "immediate",
+  "automergeType": "pr",
+  "platformAutomerge": true,
+  "rebaseWhen": "behind-base-branch",
+  "ignoreTests": false,
+  "pyenv": {
+    "enabled": false
+  },
+  "pip_requirements": {
+    "enabled": false
+  },
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Update `*_version` variables (case insensitive) in Ansible role variables files",
+      "managerFilePatterns": [
+        "/^\\.ansible/roles/[^/]+/vars/[^/]+\\.ya?ml$/",
+        "/^\\.ansible/roles/[^/]+/defaults/[^/]+\\.ya?ml$/"
+      ],
+      "matchStrings": [
+        "# renovate: datasource=(?<datasource>.+?) depName=(?<depName>.+?)(?: packageName=(?<packageName>.+?))?(?: versioning=(?<versioning>.+?))?(?: extractVersion=(?<extractVersion>.+?))?\\s+[a-zA-Z_][\\w]*?_(?i:version)\\s*:\\s+['\"]?(?<currentValue>.+?)['\"]?\\s"
+      ]
+    }
+  ],
+  "packageRules": [
+    {
+      "description": "Configure Ansible helm dependencies",
+      "matchFileNames": ["\\.ansible/**"],
+      "matchPackageNames": ["/^helm/helm$/"],
+      "separateMajorMinor": false,
+      "groupName": "ansible-helm"
+    },
+    {
+      "description": "Configure Ansible kind dependencies",
+      "matchFileNames": ["\\.ansible/**"],
+      "matchPackageNames": ["/^kubernetes-sigs/kind$/"],
+      "separateMajorMinor": false,
+      "groupName": "ansible-kind"
+    },
+    {
+      "description": "Configure Ansible krew dependencies",
+      "matchFileNames": ["\\.ansible/**"],
+      "matchPackageNames": ["/^kubernetes-sigs/krew$/"],
+      "separateMajorMinor": false,
+      "groupName": "ansible-krew"
+    },
+    {
+      "description": "Configure Ansible kubectl dependencies",
+      "matchFileNames": ["\\.ansible/**"],
+      "matchPackageNames": ["/^kubernetes/kubernetes$/"],
+      "separateMajorMinor": false,
+      "groupName": "ansible-kubectl"
+    },
+    {
+      "description": "Configure Ansible kustomize dependencies",
+      "matchFileNames": ["\\.ansible/**"],
+      "matchPackageNames": ["/^kubernetes-sigs/kustomize$/"],
+      "separateMajorMinor": false,
+      "groupName": "ansible-kustomize"
+    },
+    {
+      "description": "Configure Ansible nvm dependencies",
+      "matchFileNames": ["\\.ansible/**"],
+      "matchPackageNames": ["/^nvm-sh/nvm$/"],
+      "separateMajorMinor": false,
+      "groupName": "ansible-nvm"
+    }
+  ]
+}
