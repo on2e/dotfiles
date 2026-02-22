@@ -35,3 +35,10 @@ uv: $(UV) ## Install latest uv locally with installer script using curl
 $(UV): | $(LOCALBIN)
 	@curl -sSfL 'https://astral.sh/uv/install.sh' | \
 	UV_INSTALL_DIR='$(LOCALBIN)' UV_NO_MODIFY_PATH='1' bash
+
+##@ Clean
+
+.PHONY: clean
+clean: ## Remove virtual environment and local binaries directories
+	rm -rf .venv
+	rm -rf $(LOCALBIN)
