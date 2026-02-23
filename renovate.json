@@ -29,45 +29,51 @@
   ],
   "packageRules": [
     {
+      "description": "Configure Ansible dependencies globally",
+      "matchFileNames": ["\\.ansible/**"],
+      "semanticCommitScope": "ansible",
+      "separateMajorMinor": false
+    },
+    {
       "description": "Configure Ansible helm dependencies",
       "matchFileNames": ["\\.ansible/**"],
       "matchPackageNames": ["/^helm/helm$/"],
-      "separateMajorMinor": false,
+      "commitMessageTopic": "helm",
       "groupName": "ansible-helm"
     },
     {
       "description": "Configure Ansible kind dependencies",
       "matchFileNames": ["\\.ansible/**"],
       "matchPackageNames": ["/^kubernetes-sigs/kind$/"],
-      "separateMajorMinor": false,
+      "commitMessageTopic": "kind",
       "groupName": "ansible-kind"
     },
     {
       "description": "Configure Ansible krew dependencies",
       "matchFileNames": ["\\.ansible/**"],
       "matchPackageNames": ["/^kubernetes-sigs/krew$/"],
-      "separateMajorMinor": false,
+      "commitMessageTopic": "krew",
       "groupName": "ansible-krew"
     },
     {
       "description": "Configure Ansible kubectl dependencies",
       "matchFileNames": ["\\.ansible/**"],
       "matchPackageNames": ["/^kubernetes/kubernetes$/"],
-      "separateMajorMinor": false,
+      "commitMessageTopic": "kubectl",
       "groupName": "ansible-kubectl"
     },
     {
       "description": "Configure Ansible kustomize dependencies",
       "matchFileNames": ["\\.ansible/**"],
       "matchPackageNames": ["/^kubernetes-sigs/kustomize$/"],
-      "separateMajorMinor": false,
+      "commitMessageTopic": "kustomize",
       "groupName": "ansible-kustomize"
     },
     {
       "description": "Configure Ansible nvm dependencies",
       "matchFileNames": ["\\.ansible/**"],
       "matchPackageNames": ["/^nvm-sh/nvm$/"],
-      "separateMajorMinor": false,
+      "commitMessageTopic": "nvm",
       "groupName": "ansible-nvm"
     }
   ]
