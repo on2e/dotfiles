@@ -1,5 +1,6 @@
 - name: Set up host
-  hosts: local
+  hosts: localhost
+  connection: local
   become: false
   vars:
     repo_root: "{{ playbook_dir | dirname }}"
