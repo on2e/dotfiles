@@ -1,3 +1,9 @@
+- name: Generate .gitconfig file from template
+  ansible.builtin.template:
+    src: "{{ repo_root }}/.gitconfig.j2"
+    dest: "{{ ansible_facts['env'].HOME }}/.gitconfig"
+    mode: "0644"
+
 - name: Download .git-prompt.sh script
   ansible.builtin.get_url:
     url: https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh
