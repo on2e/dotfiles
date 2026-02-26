@@ -33,6 +33,17 @@
     - "{{ ansible_facts['user_id'] }}"
     - root
 
+- name: Copy .profile script
+  become: true
+  become_user: "{{ item }}"
+  ansible.builtin.copy:
+    src: "{{ repo_root }}/.profile"
+    dest: "~{{ item }}/.profile"
+    mode: "0644"
+  loop:
+    - "{{ ansible_facts['user_id'] }}"
+    - root
+
 - name: Copy .bash_profile script
   become: true
   become_user: "{{ item }}"

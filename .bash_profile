@@ -1,15 +1,12 @@
 # If not running bash, don't do anything
-[[ -n "${BASH_VERSION-}" ]] || return 0
+[ -n "${BASH_VERSION-}" ] || return 0
 
-if [[ -d "${HOME}/bin" ]] && [[ ":${PATH}:" != *":${HOME}/bin:"* ]]; then
-  PATH="${HOME}/bin:${PATH}"
+# Load sh-compatible shell configuration
+if [[ -f "${HOME}/.profile" ]]; then
+  . "${HOME}/.profile"
 fi
 
-if [[ -d "${HOME}/.local/bin" ]] \
-  && [[ ":${PATH}:" != *":${HOME}/.local/bin:"* ]]; then
-  PATH="${HOME}/.local/bin:${PATH}"
-fi
-
+# Load bash-specific configuration
 if [[ -f "${HOME}/.bashrc" ]]; then
   . "${HOME}/.bashrc"
 fi

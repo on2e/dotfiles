@@ -11,7 +11,7 @@ insert_final_newline = true
 [*.md]
 trim_trailing_whitespace = false
 
-[{*.sh,.bash_profile,.bashrc}]
+[{*.sh,.bash_profile,.bashrc,.profile}]
 # shfmt (https://github.com/mvdan/sh) specific properties
 switch_case_indent = true
 binary_next_line = true
