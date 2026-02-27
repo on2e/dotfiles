@@ -8,7 +8,7 @@ tools_kind_version: "v0.31.0"
 tools_krew_version: "v0.4.5"
 
 # renovate: datasource=github-releases depName=kubernetes/kubernetes
-tools_kubectl_version: "v1.35.1"
+tools_kubectl_version: "v1.35.2"
 
 # renovate: datasource=github-releases depName=kubernetes-sigs/kustomize extractVersion=^kustomize/(?<version>.+)$
 tools_kustomize_version: "v5.8.1"
