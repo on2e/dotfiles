@@ -1,7 +1,7 @@
 # shellcheck disable=SC1090,SC1091
 
 # If not running bash, don't do anything
-[[ -n "${BASH_VERSION-}" ]] || return 0
+[ -n "${BASH_VERSION-}" ] || return 0
 
 # If not running interactively, don't do anything
 [[ "$-" == *i* ]] || return 0
