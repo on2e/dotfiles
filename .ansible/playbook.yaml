@@ -11,7 +11,11 @@
         fail_msg: >
           This playbook must NOT be run as root.
           Please run it as a normal user (using `become` where needed).
+      tags: always
   roles:
-    - packages
-    - dotfiles
-    - tools
+    - role: packages
+      tags: packages
+    - role: dotfiles
+      tags: dotfiles
+    - role: tools
+      tags: tools

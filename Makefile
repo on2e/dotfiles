@@ -12,10 +12,25 @@ help: ## Display this help message
 
 ##@ Dotfiles
 
+# Additional ansible-playbook options, e.g. make ARGS='--tags mytag'
+ARGS ?=
+
 .PHONY: install
-install: ## Set up host (install dotfiles, system packages, user tools, etc.)
+install: ## Set up host using Ansible
 	@cd .ansible; \
-	$(UV) run ansible-playbook --ask-become-pass playbook.yaml
+	$(UV) run ansible-playbook --ask-become-pass playbook.yaml $(ARGS)
+
+.PHONY: packages
+packages: override ARGS += --tags packages
+packages: install ## Run only the 'packages' Ansible role
+
+.PHONY: dotfiles
+dotfiles: override ARGS += --tags dotfiles
+dotfiles: install ## Run only the 'dotfiles' Ansible role
+
+.PHONY: tools
+tools: override ARGS += --tags tools
+tools: install ## Run only the 'tools' Ansible role
 
 ##@ Dependencies
 

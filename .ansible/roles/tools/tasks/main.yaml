@@ -1,17 +1,23 @@
 - name: Install kubectl
   ansible.builtin.import_tasks: kubectl.yaml
+  tags: kubectl
 
 - name: Install krew
   ansible.builtin.import_tasks: krew.yaml
+  tags: krew
 
 - name: Install kustomize
   ansible.builtin.import_tasks: kustomize.yaml
+  tags: kustomize
 
 - name: Install kind
   ansible.builtin.import_tasks: kind.yaml
+  tags: kind
 
 - name: Install helm
   ansible.builtin.import_tasks: helm.yaml
+  tags: helm
 
 - name: Install nvm
   ansible.builtin.import_tasks: nvm.yaml
+  tags: nvm
