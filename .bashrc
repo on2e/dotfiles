@@ -132,10 +132,13 @@ __bashrc_env() {
 __bashrc_aliases() {
   if __bashrc_has_colors; then
     local cmd
-    for cmd in ls dir vdir grep; do
+    for cmd in dir vdir grep; do
       # shellcheck disable=SC2139
-      alias "$cmd"="$cmd --color=auto"
+      alias "${cmd}"="${cmd} --color=auto"
     done
+    alias ls='ls --group-directories-first --color=auto'
+  else
+    alias ls='ls --group-directories-first'
   fi
   if [[ -s "${HOME}/.bash_aliases" ]]; then
     . "${HOME}/.bash_aliases"
