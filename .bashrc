@@ -107,7 +107,42 @@ __bashrc_print_color_code() {
 
 # Set environment variables
 __bashrc_env() {
-  # Set LS_COLORS using `dircolors`
+  # Locale
+  export LANG='en_US.UTF-8'
+  export LANGUAGE='en_US:en'
+
+  # XDG
+  export XDG_CONFIG_HOME="${HOME}/.config"
+  export XDG_CACHE_HOME="${HOME}/.cache"
+  export XDG_DATA_HOME="${HOME}/.local/share"
+  export XDG_STATE_HOME="${HOME}/.local/state"
+
+  # Editing and viewing
+  if __bashrc_has 'nvim'; then
+    export EDITOR='nvim'
+    export MANPAGER='nvim +Man!'
+  else
+    export EDITOR='vi'
+    export MANPAGER='less'
+  fi
+  export VISUAL="${EDITOR}"
+  # -i : Ignore case in search patterns with no uppercase characters
+  # -M : Increase prompt verbosity
+  # -R : Interpret ANSI color escape sequences (with some caveats)
+  export LESS='-iMR'
+
+  # History
+
+  # Do not save consecutive identical commands in the history list
+  export HISTCONTROL=ignoredups
+  # Maximum number of commands to keep in the history list (memory)
+  export HISTSIZE=2000
+  # Maximum number of commands to keep in the history file (disk)
+  export HISTFILESIZE=10000
+  # Enable history entry timestamps displayed in a ISO 8601-like format
+  export HISTTIMEFORMAT='%F %T  '
+
+  # LS_COLORS
   if __bashrc_has_colors && __bashrc_has 'dircolors'; then
     if [[ -s "${HOME}/.dircolors" ]]; then
       eval "$(dircolors -b "${HOME}/.dircolors")"
@@ -115,17 +150,6 @@ __bashrc_env() {
       eval "$(dircolors -b)"
     fi
   fi
-
-  # History
-
-  # Do not save consecutive identical commands in the history list
-  HISTCONTROL=ignoredups
-  # Maximum number of commands to keep in the history list
-  HISTSIZE=2000
-  # Maximum number of commands to keep in the history file
-  HISTFILESIZE=10000
-  # Enable history entry timestamps displayed in a ISO 8601-like format
-  HISTTIMEFORMAT='%F %T  '
 }
 
 # Set aliases
