@@ -228,8 +228,8 @@ __bashrc_main() {
 
   __bashrc_env
   __bashrc_aliases
-  __bashrc_init_files
   __bashrc_ps1
+  __bashrc_init_files
   __bashrc_clear
 }
 
