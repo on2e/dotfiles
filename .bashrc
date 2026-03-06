@@ -7,14 +7,14 @@
 [[ "$-" == *i* ]] || return 0
 
 # # Check whether this script is being sourced
-# __bashrc_is_sourced() {
+# __dot_is_sourced() {
 #   local top
 #   top="$(("${#FUNCNAME[@]}" - 1))"
 #   [[ "${FUNCNAME[${top}]}" == 'source' ]]
 # }
 
 # Check whether the shell is running in an xterm-compatible terminal
-__bashrc_is_xterm() {
+__dot_is_xterm() {
   case "${TERM-}" in
     xterm* | rxvt*) return 0 ;;
     *) return 1 ;;
@@ -22,43 +22,43 @@ __bashrc_is_xterm() {
 }
 
 # Check if given command exists
-__bashrc_has() {
+__dot_has() {
   command -v "${1-}" &>/dev/null
 }
 
 # Print message
-__bashrc_print() {
+__dot_print() {
   printf '%s\n' "$*"
 }
 
 # Log message
-__bashrc_log() {
-  __bashrc_print ".bashrc: $*"
+__dot_log() {
+  __dot_print ".bashrc: $*"
 }
 
 # Log message to standard error
-__bashrc_error() {
-  >&2 __bashrc_log "$@"
+__dot_error() {
+  >&2 __dot_log "$@"
 }
 
 # Print number of colors supported by terminal
-__bashrc_num_colors() {
+__dot_num_colors() {
   # shellcheck disable=SC2015
-  __bashrc_has 'tput' && tput colors 2>/dev/null || __bashrc_print -1
+  __dot_has 'tput' && tput colors 2>/dev/null || __dot_print -1
 }
 
 # Check whether the terminal supports colored output
-__bashrc_has_colors() {
-  [[ "$(__bashrc_num_colors)" -ge 8 ]]
+__dot_has_colors() {
+  [[ "$(__dot_num_colors)" -ge 8 ]]
 }
 
-# Print text wrapped in terminal color control sequences
+# Print text wrapped in ANSI color escape sequences
 # NOTE: Shamelessly plagiarized from https://github.com/nvm-sh/nvm
-__bashrc_colorize_string() {
+__dot_colorize_string() {
   local text="${1-}"
   local code
-  code="$(__bashrc_print_color_code "${2-}" || :)"
-  if __bashrc_has_colors && [[ -n "${code}" ]]; then
+  code="$(__dot_print_color_code "${2-}" || :)"
+  if __dot_has_colors && [[ -n "${code}" ]]; then
     local color reset
     # Wrap escape sequences in `\001` (SOH) and `\002` (STX) readline markers
     # to signal the start and end of non-printable characters, allowing Bash
@@ -66,47 +66,47 @@ __bashrc_colorize_string() {
     color="\001\033[${code}m\002"
     reset='\001\033[0m\002'
     if [[ "${color}" == "${reset}" ]]; then
-      __bashrc_print "${reset}${text}"
+      __dot_print "${reset}${text}"
     else
-      __bashrc_print "${color}${text}${reset}"
+      __dot_print "${color}${text}${reset}"
     fi
   else
-    __bashrc_print "${text}"
+    __dot_print "${text}"
   fi
 }
 
 # Translate internal 012rRgGbBcCyYmMkKwW color codes to ANSI color codes
 # NOTE: Shamelessly plagiarized from https://github.com/nvm-sh/nvm
-__bashrc_print_color_code() {
+__dot_print_color_code() {
   case "${1-}" in
-    '0') __bashrc_print '0' ;;    # normal / reset
-    '1') __bashrc_print '1' ;;    # bold
-    '2') __bashrc_print '2' ;;    # faint
-    'r') __bashrc_print '0;31' ;; # red
-    'R') __bashrc_print '1;31' ;; # bold red
-    'g') __bashrc_print '0;32' ;; # green
-    'G') __bashrc_print '1;32' ;; # bold green
-    'b') __bashrc_print '0;34' ;; # blue
-    'B') __bashrc_print '1;34' ;; # bold blue
-    'c') __bashrc_print '0;36' ;; # cyan
-    'C') __bashrc_print '1;36' ;; # bold cyan
-    'm') __bashrc_print '0;35' ;; # magenta
-    'M') __bashrc_print '1;35' ;; # bold magenta
-    'y') __bashrc_print '0;33' ;; # yellow
-    'Y') __bashrc_print '1;33' ;; # bold yellow
-    'k') __bashrc_print '0;30' ;; # black
-    'K') __bashrc_print '1;30' ;; # bold black
-    'w') __bashrc_print '0;37' ;; # white
-    'W') __bashrc_print '1;37' ;; # bold white
+    '0') __dot_print '0' ;;    # normal / reset
+    '1') __dot_print '1' ;;    # bold
+    '2') __dot_print '2' ;;    # faint
+    'r') __dot_print '0;31' ;; # red
+    'R') __dot_print '1;31' ;; # bold red
+    'g') __dot_print '0;32' ;; # green
+    'G') __dot_print '1;32' ;; # bold green
+    'b') __dot_print '0;34' ;; # blue
+    'B') __dot_print '1;34' ;; # bold blue
+    'c') __dot_print '0;36' ;; # cyan
+    'C') __dot_print '1;36' ;; # bold cyan
+    'm') __dot_print '0;35' ;; # magenta
+    'M') __dot_print '1;35' ;; # bold magenta
+    'y') __dot_print '0;33' ;; # yellow
+    'Y') __dot_print '1;33' ;; # bold yellow
+    'k') __dot_print '0;30' ;; # black
+    'K') __dot_print '1;30' ;; # bold black
+    'w') __dot_print '0;37' ;; # white
+    'W') __dot_print '1;37' ;; # bold white
     *)
-      __bashrc_error "Invalid color code: ${1-}. Must be one of 012rRgGbBcCyYmMkKwW."
+      __dot_error "Invalid color code: ${1-}. Must be one of 012rRgGbBcCyYmMkKwW."
       return 1
       ;;
   esac
 }
 
 # Set environment variables
-__bashrc_env() {
+__dot_env() {
   # Locale
   export LANG='en_US.UTF-8'
   export LANGUAGE='en_US:en'
@@ -118,7 +118,7 @@ __bashrc_env() {
   export XDG_STATE_HOME="${HOME}/.local/state"
 
   # Editing and viewing
-  if __bashrc_has 'nvim'; then
+  if __dot_has 'nvim'; then
     export EDITOR='nvim'
     export MANPAGER='nvim +Man!'
   else
@@ -143,7 +143,7 @@ __bashrc_env() {
   export HISTTIMEFORMAT='%F %T  '
 
   # LS_COLORS
-  if __bashrc_has_colors && __bashrc_has 'dircolors'; then
+  if __dot_has_colors && __dot_has 'dircolors'; then
     if [[ -s "${HOME}/.dircolors" ]]; then
       eval "$(dircolors -b "${HOME}/.dircolors")"
     else
@@ -153,8 +153,8 @@ __bashrc_env() {
 }
 
 # Set aliases
-__bashrc_aliases() {
-  if __bashrc_has_colors; then
+__dot_aliases() {
+  if __dot_has_colors; then
     alias grep='grep --color=auto'
     alias ls='ls --group-directories-first --color=auto'
   else
@@ -166,7 +166,7 @@ __bashrc_aliases() {
 }
 
 # Source initialization scripts located under ~/.bashrc.d
-__bashrc_init_files() {
+__dot_init_files() {
   [[ -d "${HOME}/.bashrc.d" ]] || return 0
   while read -r f; do
     . "${f}"
@@ -174,19 +174,19 @@ __bashrc_init_files() {
 }
 
 # Customize PS1 prompt string
-__bashrc_ps1() {
+__dot_ps1() {
   local user_host cwd git_prompt cmd_prompt
 
-  user_host="$(__bashrc_colorize_string '\u@\h' 'G')"
-  cwd="$(__bashrc_colorize_string '\w' 'B')"
+  user_host="$(__dot_colorize_string '\u@\h' 'G')"
+  cwd="$(__dot_colorize_string '\w' 'B')"
 
   # Embed __git_ps1 function call in PS1 and source ~/.git-prompt.sh
   # See: https://github.com/git/git/blob/master/contrib/completion/git-prompt.sh
   # shellcheck disable=SC2034
   if [[ -s "${HOME}/.git-prompt.sh" ]]; then
     # shellcheck disable=SC2016
-    git_prompt='$(__git_ps1 " ('"$(__bashrc_colorize_string '%s' '1')"')")'
-    if __bashrc_has_colors; then
+    git_prompt='$(__git_ps1 " ('"$(__dot_colorize_string '%s' '1')"')")'
+    if __dot_has_colors; then
       GIT_PS1_SHOWCOLORHINTS='1'
     fi
     GIT_PS1_SHOWDIRTYSTATE='1'     # '*' unstaged, '+' staged, '#' no staged / no commits
@@ -198,24 +198,25 @@ __bashrc_ps1() {
 
   # Red '#' for root user, green '$' for others
   if [[ "$(id -u)" == 0 ]]; then
-    cmd_prompt="$(__bashrc_colorize_string '\$' 'r') "
+    cmd_prompt="$(__dot_colorize_string '\$' 'r') "
   else
-    cmd_prompt="$(__bashrc_colorize_string '\$' 'g') "
+    cmd_prompt="$(__dot_colorize_string '\$' 'g') "
   fi
 
   PS1="${user_host} ${cwd}${git_prompt}\n${cmd_prompt}"
+
   # Set terminal window title to username@hostname: directory
   # shellcheck disable=SC2025
-  if __bashrc_is_xterm; then
+  if __dot_is_xterm; then
     PS1="\001\033]0;\u@\h: \w\007\002${PS1}"
   fi
 }
 
 # Initialize interactive bash shell
-__bashrc_main() {
-  # if ! __bashrc_is_sourced; then
-  #   __bashrc_error ".bashrc must be sourced, not executed!"
-  #   __bashrc_clear
+__dot_main() {
+  # if ! __dot_is_sourced; then
+  #   __dot_error ".bashrc must be sourced, not executed!"
+  #   __dot_clear
   #   exit 1
   # fi
 
@@ -226,20 +227,19 @@ __bashrc_main() {
   # Save multi-line commands in a single history entry
   shopt -s cmdhist
 
-  __bashrc_env
-  __bashrc_aliases
-  __bashrc_ps1
-  __bashrc_init_files
-  __bashrc_clear
+  __dot_env
+  __dot_aliases
+  __dot_ps1
+  __dot_init_files
+  __dot_clear
 }
 
 # Unset all functions defined in this script
-__bashrc_clear() {
-  unset -f __bashrc_is_xterm __bashrc_has __bashrc_print __bashrc_log \
-    __bashrc_error __bashrc_num_colors __bashrc_has_colors \
-    __bashrc_colorize_string __bashrc_print_color_code __bashrc_env \
-    __bashrc_aliases __bashrc_init_files __bashrc_ps1 __bashrc_main \
-    __bashrc_clear
+__dot_clear() {
+  unset -f __dot_is_xterm __dot_has __dot_print __dot_log __dot_error \
+    __dot_num_colors __dot_has_colors __dot_colorize_string \
+    __dot_print_color_code __dot_env __dot_aliases __dot_init_files __dot_ps1 \
+    __dot_main __dot_clear
 }
 
-__bashrc_main
+__dot_main
