@@ -18,7 +18,7 @@
     - name: kustomize | Create temporary directory
       ansible.builtin.tempfile:
         state: directory
-        prefix: ansible-kustomize-
+        prefix: dot-ansible-kustomize-
       register: temp_dir
 
     - name: kustomize | Download and extract release archive

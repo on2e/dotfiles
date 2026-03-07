@@ -23,7 +23,7 @@
     - name: krew | Create temporary directory
       ansible.builtin.tempfile:
         state: directory
-        prefix: ansible-krew-
+        prefix: dot-ansible-krew-
       register: temp_dir
 
     - name: krew | Download and extract release archive

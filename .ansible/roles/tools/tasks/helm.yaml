@@ -18,7 +18,7 @@
     - name: helm | Create temporary directory
       ansible.builtin.tempfile:
         state: directory
-        prefix: ansible-helm-
+        prefix: dot-ansible-helm-
       register: temp_dir
 
     - name: helm | Download and extract release archive
