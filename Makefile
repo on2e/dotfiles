@@ -44,6 +44,8 @@ UV ?= $(LOCALBIN)/uv
 setup: uv ## Create virtual environment and install dependencies with uv
 	@$(UV) venv --allow-existing
 	@$(UV) pip install -r requirements.txt
+	@cd .ansible; \
+	$(UV) run ansible-galaxy collection install -r requirements.yaml
 
 .PHONY: uv
 uv: $(UV) ## Install latest uv locally with installer script using curl
