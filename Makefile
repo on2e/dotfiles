@@ -42,7 +42,7 @@ UV ?= $(LOCALBIN)/uv
 
 .PHONY: setup
 setup: uv ## Create virtual environment and install dependencies with uv
-	@$(UV) venv
+	@$(UV) venv --allow-existing
 	@$(UV) pip install -r requirements.txt
 
 .PHONY: uv
