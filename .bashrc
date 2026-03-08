@@ -127,9 +127,10 @@ __dot_env() {
   fi
   export VISUAL="${EDITOR}"
   # -i : Ignore case in search patterns with no uppercase characters
+  # -F : Exit if input file fits on the first screen
   # -M : Increase prompt verbosity
   # -R : Interpret ANSI color escape sequences (with some caveats)
-  export LESS='-iMR'
+  export LESS='-iFMR'
 
   # History
 
