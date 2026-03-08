@@ -18,7 +18,7 @@ ARGS ?=
 .PHONY: install
 install: ## Set up host using Ansible
 	@cd .ansible; \
-	$(UV) run ansible-playbook --ask-become-pass playbook.yaml $(ARGS)
+	$(UV) run ansible-playbook --ask-become-pass playbook.yml $(ARGS)
 
 .PHONY: packages
 packages: override ARGS += --tags packages
@@ -45,7 +45,7 @@ setup: uv ## Create virtual environment and install dependencies with uv
 	@$(UV) venv --allow-existing
 	@$(UV) pip install -r requirements.txt
 	@cd .ansible; \
-	$(UV) run ansible-galaxy collection install -r requirements.yaml
+	$(UV) run ansible-galaxy collection install -r requirements.yml
 
 .PHONY: uv
 uv: $(UV) ## Install latest uv locally with installer script using curl
