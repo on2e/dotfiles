@@ -40,6 +40,13 @@
       "separateMajorMinor": false
     },
     {
+      "description": "Configure Ansible Galaxy dependencies",
+      "matchManagers": ["ansible-galaxy"],
+      "matchFileNames": ["/^\\.ansible/requirements\\.ya?ml$/"],
+      "branchTopic": "ansible-{{{depNameSanitized}}}",
+      "commitMessageTopic": "{{#if (equals depType 'role')}}role{{else}}collection{{/if}} {{depName}}"
+    },
+    {
       "description": "Configure Ansible helm dependencies",
       "matchFileNames": ["\\.ansible/**"],
       "matchPackageNames": ["/^helm/helm$/"],
