@@ -3,6 +3,8 @@
   ansible.builtin.package:
     state: present
     name:
+      - bash
+      - bash-completion
       - curl
       - git
       - locales
