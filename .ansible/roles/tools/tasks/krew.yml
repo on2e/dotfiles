@@ -3,22 +3,8 @@
     path: "{{ ansible_facts['env'].HOME }}/.krew/bin/kubectl-krew"
   register: krew_stat
 
-- name: krew | Check existing version
-  when: krew_stat.stat.exists
-  ansible.builtin.command: "{{ ansible_facts['env'].HOME }}/.krew/bin/kubectl-krew version"
-  register: krew_version_cmd
-  check_mode: false
-  changed_when: false
-
-- name: krew | Download release binary and install krew plugin
-  when: >-
-    not krew_stat.stat.exists
-    or (tools_krew_version != (
-      krew_version_cmd.stdout_lines |
-      select('search', '^GitTag') |
-      first |
-      regex_search('v[0-9]+\\.[0-9]+\\.[0-9]+$')
-    ))
+- name: krew | Download latest release binary and install krew plugin
+  when: not krew_stat.stat.exists
   block:
     - name: krew | Create temporary directory
       ansible.builtin.tempfile:
@@ -26,14 +12,14 @@
         prefix: dot-ansible-krew-
       register: temp_dir
 
-    - name: krew | Download and extract release archive
+    - name: krew | Download and extract latest release archive
       ansible.builtin.unarchive:
-        src: "https://github.com/kubernetes-sigs/krew/releases/download/{{ tools_krew_version }}/krew-linux_amd64.tar.gz"
+        src: "https://github.com/kubernetes-sigs/krew/releases/latest/download/krew-linux_amd64.tar.gz"
         dest: "{{ temp_dir.path }}"
         remote_src: true
         mode: "0755"
 
-    - name: krew | Update plugin indexes and install krew plugin
+    - name: krew | Update plugin index and install krew plugin
       ansible.builtin.command: "{{ temp_dir.path }}/krew-linux_amd64 install krew"
       args:
         creates: "{{ ansible_facts['env'].HOME }}/.krew/bin/kubectl-krew"
@@ -43,11 +29,12 @@
         path: "{{ temp_dir.path }}"
         state: absent
 
-- name: krew | Update plugin indexes and install plugins from krew_plugins.txt
-  ansible.builtin.command: "{{ ansible_facts['env'].HOME }}/.krew/bin/kubectl-krew install"
+- name: krew | Install kubectl plugins from krew_plugins.txt
+  ansible.builtin.command: "{{ ansible_facts['env'].HOME }}/.krew/bin/kubectl-krew install --no-update-index"
   args:
     stdin: "{{ lookup('file', 'krew_plugins.txt') }}"
-  # TODO: changed_when
+  register: krew_install_cmd
+  changed_when: "'Installed plugin:' in krew_install_cmd.stderr"
 
 - name: krew | Copy initialization script under ~/.bashrc.d
   ansible.builtin.copy:

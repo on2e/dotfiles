@@ -61,13 +61,6 @@
       "groupName": "ansible-kind"
     },
     {
-      "description": "Configure Ansible krew dependencies",
-      "matchFileNames": ["\\.ansible/**"],
-      "matchPackageNames": ["/^kubernetes-sigs/krew$/"],
-      "commitMessageTopic": "krew",
-      "groupName": "ansible-krew"
-    },
-    {
       "description": "Configure Ansible kubectl dependencies",
       "matchFileNames": ["\\.ansible/**"],
       "matchPackageNames": ["/^kubernetes/kubernetes$/"],

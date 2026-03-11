@@ -4,9 +4,6 @@ tools_helm_version: "v4.1.1"
 # renovate: datasource=github-releases depName=kubernetes-sigs/kind
 tools_kind_version: "v0.31.0"
 
-# renovate: datasource=github-releases depName=kubernetes-sigs/krew
-tools_krew_version: "v0.5.0"
-
 # renovate: datasource=github-releases depName=kubernetes/kubernetes
 tools_kubectl_version: "v1.35.2"
 
