@@ -1,6 +1,6 @@
 - name: Generate .gitconfig file from template
   ansible.builtin.template:
-    src: "{{ repo_root }}/.gitconfig.j2"
+    src: "{{ root_dir }}/.gitconfig.j2"
     dest: "{{ ansible_facts['env'].HOME }}/.gitconfig"
     mode: "0644"
 
@@ -14,7 +14,7 @@
   become: true
   become_user: "{{ item }}"
   ansible.builtin.copy:
-    src: "{{ repo_root }}/.bashrc.d"
+    src: "{{ root_dir }}/.bashrc.d"
     dest: "~{{ item }}"
     directory_mode: "0755"
     mode: "0644"
@@ -26,7 +26,7 @@
   become: true
   become_user: "{{ item }}"
   ansible.builtin.copy:
-    src: "{{ repo_root }}/.bashrc"
+    src: "{{ root_dir }}/.bashrc"
     dest: "~{{ item }}/.bashrc"
     mode: "0644"
   loop:
@@ -37,7 +37,7 @@
   become: true
   become_user: "{{ item }}"
   ansible.builtin.copy:
-    src: "{{ repo_root }}/.profile"
+    src: "{{ root_dir }}/.profile"
     dest: "~{{ item }}/.profile"
     mode: "0644"
   loop:
@@ -48,7 +48,7 @@
   become: true
   become_user: "{{ item }}"
   ansible.builtin.copy:
-    src: "{{ repo_root }}/.bash_profile"
+    src: "{{ root_dir }}/.bash_profile"
     dest: "~{{ item }}/.bash_profile"
     mode: "0644"
   loop:

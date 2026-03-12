@@ -3,7 +3,7 @@
   connection: local
   become: false
   vars:
-    repo_root: "{{ playbook_dir | dirname }}"
+    root_dir: "{{ playbook_dir | dirname }}"
   pre_tasks:
     - name: Abort if connected as root
       ansible.builtin.assert:
