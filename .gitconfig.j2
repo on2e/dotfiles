@@ -3,6 +3,8 @@
 	email = {{ email }}
 [init]
 	defaultBranch = main
+[pull]
+	rebase = true
 [alias]
 	lg = log --graph --decorate=full --all --oneline
 	lgv = log --graph --decorate=full --all --format='%C(yellow)%h%Creset%C(auto)%d%Creset %s%n%C(dim normal)%aN <%aE> (%ah)%Creset%n'
