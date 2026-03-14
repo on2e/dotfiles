@@ -37,54 +37,20 @@
       "description": "Configure Ansible updates globally",
       "matchFileNames": ["\\.ansible/**"],
       "semanticCommitScope": "ansible",
+      "branchTopic": "ansible-{{{depNameSanitized}}}",
       "separateMajorMinor": false
     },
     {
       "description": "Configure Ansible Galaxy updates",
       "matchManagers": ["ansible-galaxy"],
       "matchFileNames": ["/^\\.ansible/requirements\\.ya?ml$/"],
-      "branchTopic": "ansible-{{{depNameSanitized}}}",
       "commitMessageTopic": "{{#if (equals depType 'role')}}role{{else}}collection{{/if}} {{depName}}"
     },
     {
-      "description": "Configure Ansible helm tool updates",
+      "description": "Configure Ansible `tools` role updates",
       "matchManagers": ["regex"],
       "matchFileNames": ["/^\\.ansible/roles/tools/defaults/main.ya?ml$/"],
-      "matchPackageNames": ["/^helm/helm$/"],
-      "commitMessageTopic": "helm",
-      "groupName": "ansible-helm"
-    },
-    {
-      "description": "Configure Ansible kind tool updates",
-      "matchManagers": ["regex"],
-      "matchFileNames": ["/^\\.ansible/roles/tools/defaults/main.ya?ml$/"],
-      "matchPackageNames": ["/^kubernetes-sigs/kind$/"],
-      "commitMessageTopic": "kind",
-      "groupName": "ansible-kind"
-    },
-    {
-      "description": "Configure Ansible kubectl tool updates",
-      "matchManagers": ["regex"],
-      "matchFileNames": ["/^\\.ansible/roles/tools/defaults/main.ya?ml$/"],
-      "matchPackageNames": ["/^kubernetes/kubernetes$/"],
-      "commitMessageTopic": "kubectl",
-      "groupName": "ansible-kubectl"
-    },
-    {
-      "description": "Configure Ansible kustomize tool updates",
-      "matchManagers": ["regex"],
-      "matchFileNames": ["/^\\.ansible/roles/tools/defaults/main.ya?ml$/"],
-      "matchPackageNames": ["/^kubernetes-sigs/kustomize$/"],
-      "commitMessageTopic": "kustomize",
-      "groupName": "ansible-kustomize"
-    },
-    {
-      "description": "Configure Ansible nvm tool updates",
-      "matchManagers": ["regex"],
-      "matchFileNames": ["/^\\.ansible/roles/tools/defaults/main.ya?ml$/"],
-      "matchPackageNames": ["/^nvm-sh/nvm$/"],
-      "commitMessageTopic": "nvm",
-      "groupName": "ansible-nvm"
+      "commitMessageTopic": "{{depName}}"
     }
   ]
 }
