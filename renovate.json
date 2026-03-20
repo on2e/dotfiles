@@ -23,7 +23,7 @@
         "/^\\.ansible/roles/[^/]+/defaults/[^/]+\\.ya?ml$/"
       ],
       "matchStrings": [
-        "# renovate: datasource=(?<datasource>.+?) depName=(?<depName>.+?)(?: packageName=(?<packageName>.+?))?(?: versioning=(?<versioning>.+?))?(?: extractVersion=(?<extractVersion>.+?))?\\s+[a-zA-Z_][\\w]*?_(?i:version)\\s*:\\s+['\"]?(?<currentValue>.+?)['\"]?\\s"
+        "# renovate: datasource=(?<datasource>.+?) depName=(?<depName>.+?)(?: packageName=(?<packageName>.+?))?(?: versioning=(?<versioning>.+?))?(?: extractVersion=(?<extractVersion>.+?))?\\s+[a-zA-Z_][\\w]*?_(?i:version)\\s*:\\s+[\"']?(?<currentValue>.+?)[\"']?\\s"
       ]
     }
   ],
@@ -34,23 +34,18 @@
       "automerge": true
     },
     {
-      "description": "Configure Ansible updates globally",
+      "description": "Set `ansible` commit scope for all Ansible updates",
       "matchFileNames": ["\\.ansible/**"],
+      "additionalBranchPrefix": "ansible-",
       "semanticCommitScope": "ansible",
-      "branchTopic": "ansible-{{{depNameSanitized}}}",
+      "commitMessageTopic": "{{depName}}",
       "separateMajorMinor": false
     },
     {
-      "description": "Configure Ansible Galaxy updates",
+      "description": "Indicate Ansible Galaxy role or collection updates in the commit message",
       "matchManagers": ["ansible-galaxy"],
       "matchFileNames": ["/^\\.ansible/requirements\\.ya?ml$/"],
       "commitMessageTopic": "{{#if (equals depType 'role')}}role{{else}}collection{{/if}} {{depName}}"
-    },
-    {
-      "description": "Configure Ansible `tools` role updates",
-      "matchManagers": ["regex"],
-      "matchFileNames": ["/^\\.ansible/roles/tools/defaults/main.ya?ml$/"],
-      "commitMessageTopic": "{{depName}}"
     }
   ]
 }
