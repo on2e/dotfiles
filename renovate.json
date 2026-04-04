@@ -1,13 +1,11 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended", ":gitSignOff"],
-  "baseBranchPatterns": ["main"],
-  "semanticCommits": "enabled",
-  "prCreation": "immediate",
-  "automergeType": "pr",
-  "platformAutomerge": true,
-  "rebaseWhen": "behind-base-branch",
-  "ignoreTests": true,
+  "extends": [
+    "github>on2e/renovate-config",
+    ":automergeMinor",
+    ":automergeDigest",
+    ":skipStatusChecks"
+  ],
   "pyenv": {
     "enabled": false
   },
@@ -28,11 +26,6 @@
     }
   ],
   "packageRules": [
-    {
-      "description": "Auto-merge non-major updates",
-      "matchUpdateTypes": ["minor", "patch", "digest"],
-      "automerge": true
-    },
     {
       "description": "Use semantic commit scope `ansible` for all Ansible updates",
       "matchFileNames": ["\\.ansible/**"],
