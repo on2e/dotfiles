@@ -6,13 +6,6 @@
 # If not running interactively, don't do anything
 [[ "$-" == *i* ]] || return 0
 
-# # Check whether this script is being sourced
-# __dot_is_sourced() {
-#   local top
-#   top="$(("${#FUNCNAME[@]}" - 1))"
-#   [[ "${FUNCNAME[${top}]}" == 'source' ]]
-# }
-
 # Check whether the shell is running in an xterm-compatible terminal
 __dot_is_xterm() {
   case "${TERM-}" in
@@ -26,25 +19,10 @@ __dot_has() {
   command -v "${1-}" &>/dev/null
 }
 
-# Print message
-__dot_print() {
-  printf '%s\n' "$*"
-}
-
-# Log message
-__dot_log() {
-  __dot_print ".bashrc: $*"
-}
-
-# Log message to standard error
-__dot_error() {
-  >&2 __dot_log "$@"
-}
-
 # Print number of colors supported by terminal
 __dot_num_colors() {
   # shellcheck disable=SC2015
-  __dot_has 'tput' && tput colors 2>/dev/null || __dot_print -1
+  __dot_has 'tput' && tput colors 2>/dev/null || echo -1
 }
 
 # Check whether the terminal supports colored output
@@ -53,56 +31,23 @@ __dot_has_colors() {
 }
 
 # Print text wrapped in ANSI color escape sequences
-# NOTE: Shamelessly plagiarized from https://github.com/nvm-sh/nvm
 __dot_colorize_string() {
   local text="${1-}"
-  local code
-  code="$(__dot_print_color_code "${2-}" || :)"
-  if __dot_has_colors && [[ -n "${code}" ]]; then
-    local color reset
+  local code="${2-}"
+  if __dot_has_colors; then
     # Wrap escape sequences in `\001` (SOH) and `\002` (STX) readline markers
     # to signal the start and end of non-printable characters, allowing Bash
     # to calculate the prompt size correctly and prevent line wrapping issues
-    color="\001\033[${code}m\002"
-    reset='\001\033[0m\002'
-    if [[ "${color}" == "${reset}" ]]; then
-      __dot_print "${reset}${text}"
+    local color="\001\033[${code}m\002"
+    local reset='\001\033[0m\002'
+    if [[ -z "${code}" ]] || [[ "${code}" == 0 ]]; then
+      echo "${reset}${text}"
     else
-      __dot_print "${color}${text}${reset}"
+      echo "${color}${text}${reset}"
     fi
   else
-    __dot_print "${text}"
+    echo "${text}"
   fi
-}
-
-# Translate internal 012rRgGbBcCyYmMkKwW color codes to ANSI color codes
-# NOTE: Shamelessly plagiarized from https://github.com/nvm-sh/nvm
-__dot_print_color_code() {
-  case "${1-}" in
-    '0') __dot_print '0' ;;    # normal / reset
-    '1') __dot_print '1' ;;    # bold
-    '2') __dot_print '2' ;;    # faint
-    'r') __dot_print '0;31' ;; # red
-    'R') __dot_print '1;31' ;; # bold red
-    'g') __dot_print '0;32' ;; # green
-    'G') __dot_print '1;32' ;; # bold green
-    'b') __dot_print '0;34' ;; # blue
-    'B') __dot_print '1;34' ;; # bold blue
-    'c') __dot_print '0;36' ;; # cyan
-    'C') __dot_print '1;36' ;; # bold cyan
-    'm') __dot_print '0;35' ;; # magenta
-    'M') __dot_print '1;35' ;; # bold magenta
-    'y') __dot_print '0;33' ;; # yellow
-    'Y') __dot_print '1;33' ;; # bold yellow
-    'k') __dot_print '0;30' ;; # black
-    'K') __dot_print '1;30' ;; # bold black
-    'w') __dot_print '0;37' ;; # white
-    'W') __dot_print '1;37' ;; # bold white
-    *)
-      __dot_error "Invalid color code: ${1-}. Must be one of 012rRgGbBcCyYmMkKwW."
-      return 1
-      ;;
-  esac
 }
 
 # Set environment variables
@@ -178,8 +123,8 @@ __dot_init_files() {
 __dot_ps1() {
   local user_host cwd git_prompt cmd_prompt
 
-  user_host="$(__dot_colorize_string '\u@\h' 'G')"
-  cwd="$(__dot_colorize_string '\w' 'B')"
+  user_host="$(__dot_colorize_string '\u@\h' '1;32')"
+  cwd="$(__dot_colorize_string '\w' '1;34')"
 
   # Embed __git_ps1 function call in PS1 and source ~/.git-prompt.sh
   # See: https://github.com/git/git/blob/master/contrib/completion/git-prompt.sh
@@ -199,9 +144,9 @@ __dot_ps1() {
 
   # Red '#' for root user, green '$' for others
   if [[ "$(id -u)" == 0 ]]; then
-    cmd_prompt="$(__dot_colorize_string '\$' 'r') "
+    cmd_prompt="$(__dot_colorize_string '\$' '0;31') "
   else
-    cmd_prompt="$(__dot_colorize_string '\$' 'g') "
+    cmd_prompt="$(__dot_colorize_string '\$' '0;32') "
   fi
 
   PS1="${user_host} ${cwd}${git_prompt}\n${cmd_prompt}"
@@ -215,12 +160,6 @@ __dot_ps1() {
 
 # Initialize interactive bash shell
 __dot_main() {
-  # if ! __dot_is_sourced; then
-  #   __dot_error ".bashrc must be sourced, not executed!"
-  #   __dot_clear
-  #   exit 1
-  # fi
-
   # Check the window size after each (non-builtin) command to update LINES and COLUMNS
   shopt -s checkwinsize
   # Append, not overwrite, history list to the history file on shell exit
@@ -237,9 +176,8 @@ __dot_main() {
 
 # Unset all functions defined in this script
 __dot_clear() {
-  unset -f __dot_is_xterm __dot_has __dot_print __dot_log __dot_error \
-    __dot_num_colors __dot_has_colors __dot_colorize_string \
-    __dot_print_color_code __dot_env __dot_aliases __dot_init_files __dot_ps1 \
+  unset -f __dot_is_xterm __dot_has __dot_num_colors __dot_has_colors \
+    __dot_colorize_string __dot_env __dot_aliases __dot_init_files __dot_ps1 \
     __dot_main __dot_clear
 }
 
