@@ -2,7 +2,7 @@
 tools_helm_version: "v4.2.0"
 
 # renovate: datasource=github-releases depName=kind packageName=kubernetes-sigs/kind
-tools_kind_version: "v0.31.0"
+tools_kind_version: "v0.32.0"
 
 # renovate: datasource=github-releases depName=kubectl packageName=kubernetes/kubernetes
 tools_kubectl_version: "v1.36.1"
