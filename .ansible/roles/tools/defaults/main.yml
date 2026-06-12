@@ -1,5 +1,5 @@
 # renovate: datasource=github-releases depName=helm packageName=helm/helm
-tools_helm_version: "v4.2.0"
+tools_helm_version: "v4.2.1"
 
 # renovate: datasource=github-releases depName=kind packageName=kubernetes-sigs/kind
 tools_kind_version: "v0.32.0"
