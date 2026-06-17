@@ -34,7 +34,7 @@ tools: install ## Run only the 'tools' Ansible role
 
 ##@ Dependencies
 
-LOCALBIN ?= $(shell pwd)/bin
+LOCALBIN ?= $(CURDIR)/bin
 $(LOCALBIN):
 	mkdir -p $(LOCALBIN)
 
