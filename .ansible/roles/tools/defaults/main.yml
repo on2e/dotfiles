@@ -11,4 +11,4 @@ tools_kubectl_version: "v1.36.3"
 tools_kustomize_version: "v5.8.1"
 
 # renovate: datasource=github-releases depName=nvm packageName=nvm-sh/nvm
-tools_nvm_version: "v0.40.6"
+tools_nvm_version: "v0.40.7"
