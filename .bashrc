@@ -8,10 +8,7 @@
 
 # Check whether the shell is running in an xterm-compatible terminal
 __dot_is_xterm() {
-  case "${TERM-}" in
-    xterm* | rxvt*) return 0 ;;
-    *) return 1 ;;
-  esac
+  [[ "${TERM-}" =~ ^(xterm|rxvt) ]]
 }
 
 # Check if given command exists
