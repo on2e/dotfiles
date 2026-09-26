@@ -111,9 +111,9 @@ __dot_aliases() {
 # Source initialization scripts located under ~/.bashrc.d
 __dot_init_files() {
   [[ -d "${HOME}/.bashrc.d" ]] || return 0
-  while read -r f; do
+  while IFS= read -r -d '' f; do
     . "${f}"
-  done <<<"$(find "${HOME}/.bashrc.d" -mindepth 1 -maxdepth 1 -type f -name '*.sh' | sort)"
+  done < <(find "${HOME}/.bashrc.d" -mindepth 1 -maxdepth 1 -type f -name '*.sh' -print0 | sort -z)
 }
 
 # Customize PS1 prompt string
