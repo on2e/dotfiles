@@ -49,10 +49,6 @@ __dot_colorize_string() {
 
 # Set environment variables
 __dot_env() {
-  # Locale
-  export LANG='en_US.UTF-8'
-  export LANGUAGE='en_US:en'
-
   # XDG
   export XDG_CONFIG_HOME="${HOME}/.config"
   export XDG_CACHE_HOME="${HOME}/.cache"

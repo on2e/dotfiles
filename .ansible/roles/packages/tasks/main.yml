@@ -1,13 +1,13 @@
 - name: Install system packages
   become: true
   ansible.builtin.package:
-    state: present
     name:
       - bash
       - bash-completion
       - curl
       - git
       - locales
+    state: present
 
 - name: Enable locales
   become: true
@@ -15,3 +15,22 @@
     name:
       - en_US.UTF-8
     state: present
+
+  # systemd-localed.service checks whether /etc/locale.conf exists and falls
+  # back to /etc/default/locale if it doesn't when searching/updating the
+  # system-wide locale settings. So, do the same to manually set the locale.
+- name: Check if /etc/locale.conf file exists, fall back to /etc/default/locale otherwise
+  ansible.builtin.stat:
+    path: /etc/locale.conf
+  register: locale_conf_stat
+
+- name: Set system locale
+  become: true
+  ansible.builtin.lineinfile:
+    path: "{{ '/etc/locale.conf' if locale_conf_stat.stat.exists else '/etc/default/locale' }}"
+    regexp: "^LANG="
+    line: LANG=en_US.UTF-8
+    create: true
+    owner: root
+    group: root
+    mode: "0644"
