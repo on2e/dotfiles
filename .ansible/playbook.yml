@@ -13,8 +13,8 @@
           Please run it as a normal user (using `become` where needed).
       tags: always
   roles:
-    - role: packages
-      tags: packages
+    - role: system
+      tags: system
     - role: dotfiles
       tags: dotfiles
     - role: tools

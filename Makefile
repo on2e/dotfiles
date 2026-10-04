@@ -20,9 +20,9 @@ install: ## Set up host using Ansible
 	@cd .ansible; \
 	$(UV) run ansible-playbook --ask-become-pass playbook.yml $(ARGS)
 
-.PHONY: packages
-packages: override ARGS += --tags packages
-packages: install ## Run only the 'packages' Ansible role
+.PHONY: system
+system: override ARGS += --tags system
+system: install ## Run only the 'system' Ansible role
 
 .PHONY: dotfiles
 dotfiles: override ARGS += --tags dotfiles
